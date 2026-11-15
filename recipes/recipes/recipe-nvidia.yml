@@ -93,8 +93,10 @@ modules:
   # =========================================================================
   - type: files
     files:
-      - source: system
-        destination: /
+      - source: files/untitled.png
+        destination: /usr/share/pixmaps/silvestreos-logo.png
+      - source: files/fastfetch.jsonc
+        destination: /etc/fastfetch/config.jsonc
 
   # =========================================================================
   # 4. FIRMA DE SEGURIDAD AUTOMÁTICA
