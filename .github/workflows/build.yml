@@ -13,19 +13,32 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        recipe:
-          - recipe.yml
-
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Build Custom Image
-        uses: blue-build/github-action@v1.14
+      - name: Maximize build space
+        uses: uger/free-disk-space@main
         with:
-          recipe: ${{ matrix.recipe }}
-          registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }}
+          tool-cache: false
+          android: false
+          dotnet: false
+          haskell: false
+          large-packages: false
+          docker-images: false
+
+      - name: Build Image with Podman
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run BlueBuild CLI without signature
+        run: |
+          podman run --rm \
+            --security-opt label=disable \
+            -v $(pwd):/workdir \
+            -w /workdir \
+            ghcr.io/blue-build/cli:latest \
+            build --no-sign recipe.yml
