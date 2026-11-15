@@ -1,4 +1,4 @@
-name: Build Custom Image
+name: Build SilvestreOS
 on:
   push:
     branches:
@@ -7,12 +7,19 @@ on:
 
 jobs:
   build:
-    name: Build Custom Image
+    name: Build Image
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe:
+          - recipe.yml
+          - recipes/recipe.yml
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -31,4 +38,4 @@ jobs:
             -v $(pwd):/workdir \
             -w /workdir \
             ghcr.io/blue-build/cli:latest \
-            bluebuild build --no-sign recipe.yml
+            bluebuild build --no-sign ${{ matrix.recipe }}
