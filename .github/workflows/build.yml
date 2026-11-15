@@ -31,4 +31,4 @@ jobs:
             -v $(pwd):/workdir \
             -w /workdir \
             ghcr.io/blue-build/cli:latest \
-            build --no-sign recipe.yml
+            bluebuild build --no-sign recipe.yml
