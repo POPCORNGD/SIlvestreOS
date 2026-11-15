@@ -33,13 +33,13 @@ jobs:
       - name: Build Custom Image
         uses: blue-build/github-action@v1.14
         with:
+      recipe: ${{ matrix.recipe }}
+      registry_token: ${{ github.token }}
+      pr_event_number: ${{ github.event.number }}
+      cli_args: "--no-sign"
           recipe: ${{ matrix.recipe }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
-    with:
-          recipe: ${{ matrix.recipe }}
-          registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }}
-          no_sign: true
+   
           # enabled by default, disable if your image is small and you want faster builds
           maximize_build_space: true
