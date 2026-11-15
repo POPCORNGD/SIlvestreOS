@@ -13,20 +13,22 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        recipe:
-          - recipe.yml
-
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Build Custom Image
-        uses: blue-build/github-action@v1.14
+      - name: Log in to GitHub Container Registry
+        uses: redhat-actions/podman-login@v1
         with:
-          recipe: ${{ matrix.recipe }}
-          registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }}
-          cli_args: "--no-sign"
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run BlueBuild CLI with No-Sign
+        run: |
+          podman run --rm \
+            --security-opt label=disable \
+            -v $(pwd):/workdir \
+            -w /workdir \
+            ghcr.io/blue-build/cli:latest \
+            build --no-sign recipe.yml
