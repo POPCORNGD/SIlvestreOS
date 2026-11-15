@@ -17,25 +17,18 @@ jobs:
       fail-fast: false
       matrix:
         recipe:
-          - recipe.yml
           - recipes/recipe.yml
+          # Si tienes otra receta, añádela aquí abajo con su ruta exacta:
+          # - recipes/otra-receta.yml
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
-        uses: redhat-actions/podman-login@v1
+      - name: Build Custom Image
+        uses: blue-build/github-action@v1.14
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run BlueBuild CLI with No-Sign
-        run: |
-          podman run --rm \
-            --security-opt label=disable \
-            -v $(pwd):/workdir \
-            -w /workdir \
-            ghcr.io/blue-build/cli:latest \
-            bluebuild build --no-sign ${{ matrix.recipe }}
+          recipe: ${{ matrix.recipe }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          cli_args: "--no-sign"
