@@ -18,19 +18,28 @@ jobs:
       matrix:
         recipe:
           - recipe.yml
-          - recipes/recipe.yml
+          - recipes/recipe-nvidia.yml
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Build Custom Image
-        uses: blue-build/github-action@v1.14
+      - name: Log in to GitHub Container Registry
+        uses: redhat-actions/podman-login@v1
         with:
-          recipe: ${{ matrix.recipe }}
-          registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }}
-          cli_args: "--no-sign"
-        env:
-          COSIGN_PRIVATE_KEY: ""
-          COSIGN_PASSWORD: ""
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run BlueBuild CLI Manually
+        run: |
+          if [ -f "${{ matrix.recipe }}" ]; then
+            podman run --rm \
+              --security-opt label=disable \
+              -v $(pwd):/workdir \
+              -w /workdir \
+              ghcr.io/blue-build/cli:latest \
+              bluebuild build --no-sign "${{ matrix.recipe }}"
+          else
+            echo "La receta ${{ matrix.recipe }} no existe en este directorio, saltando..."
+          fi
