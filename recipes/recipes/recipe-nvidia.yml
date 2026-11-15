@@ -1,0 +1,102 @@
+name: silvestre-nvidia
+description: SilvestreOS v1.0 Madeline (NVIDIA Edition) - Zero-terminal, out-of-the-box gaming, streaming, and creator atomic OS.
+base-image: ghcr.io/ublue-os/bazzite-nvidia-open
+image-version: stable
+
+modules:
+  # =========================================================================
+  # 1. MOTOR DE RENDIMIENTO, LATENCIA Y HARDWARE (TODO CONFIGURADO DE FÁBRICA)
+  # =========================================================================
+  - type: rpm-ostree
+    install:
+      # Optimizaciones invisibles de CPU, FPS y baja latencia
+      - scx-scheds
+      - irqbalance
+      - gamemode
+      - mangohud
+      - goverlay
+      - gamescope
+      - vkBasalt
+      # Control visual de periféricos (Ratones, RGB y Mandos sin comandos)
+      - piper
+      - libratbag-ratbagd
+      - openrgb
+      - solaar
+      # Audio pro y captura limpia para directos
+      - helvum
+      - qpwgraph
+      - easyeffects
+      - jack-audio-connection-kit-dbus
+      - v4l2loopback
+      - gstreamer1-plugins-bad-free
+      - gstreamer1-plugins-ugly-free
+      - ffmpeg-free
+      # Todas las versiones de Java preinstaladas para Minecraft
+      - java-21-openjdk
+      - java-17-openjdk
+      - java-11-openjdk
+      - java-1.8.0-openjdk
+      # Utilidades de sistema y descompresión (ZIP/RAR integrados en el clic derecho)
+      - fastfetch
+      - btop
+      - nvtop
+      - zstd
+      - p7zip
+      - p7zip-plugins
+      - unrar
+
+  # =========================================================================
+  # 2. TIENDA GRÁFICA Y ECOSISTEMA COMPLETO (CERO TERMINAL)
+  # =========================================================================
+  - type: default-flatpaks
+    notify: true
+    system:
+      install:
+        # Tienda y Gestores Visuales (Instalar, borrar y gestionar con 1 clic)
+        - io.github.kolunmi.Bazaar
+        - io.github.flattool.Warehouse
+        - com.github.tchx84.Flatseal
+        - it.mijorus.gearlever
+        # Streaming, Grabación y Discord Listos para Usar
+        - com.obsproject.Studio
+        - com.obsproject.Studio.Plugin.OBSVkCapture
+        - com.obsproject.Studio.Plugin.Gstreamer
+        - com.dec05eba.gpu_screen_recorder
+        - dev.vencord.Vesktop
+        - com.discordapp.Discord
+        - org.audacityteam.Audacity
+        # Todos los Launchers de Juegos (Steam viene en la base + todos estos)
+        - org.prismlauncher.PrismLauncher
+        - com.modrinth.ModrinthApp
+        - com.heroicgameslauncher.hgl
+        - net.lutris.Lutris
+        - com.usebottles.bottles
+        - net.davidotek.pupgui2
+        # Emuladores Preconfigurados
+        - org.duckstation.DuckStation
+        - net.pcsx2.PCSX2
+        - org.DolphinEmu.dolphin-emu
+        - org.libretro.RetroArch
+        # Suite de Edición, Diseño y Multimedia
+        - org.kde.kdenlive
+        - org.gimp.GIMP
+        - org.inkscape.Inkscape
+        - org.blender.Blender
+        - io.mpv.Mpv
+        - org.qbittorrent.qBittorrent
+        # Navegadores y Utilidades Diarias
+        - com.brave.Browser
+        - org.onlyoffice.desktopeditors
+
+  # =========================================================================
+  # 3. INYECCIÓN DE OPTIMIZACIONES Y BRANDING DE SILVESTREOS
+  # =========================================================================
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  # =========================================================================
+  # 4. FIRMA DE SEGURIDAD AUTOMÁTICA
+  # =========================================================================
+  - type: signing
