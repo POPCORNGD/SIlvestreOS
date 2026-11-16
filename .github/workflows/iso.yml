@@ -17,9 +17,22 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
 
+      - name: Create bypass files
+        run: |
+          touch cosign.key cosign.pub
+
       - name: Build Custom ISO
         uses: blue-build/github-action@v1
         with:
           recipe: recipes/recipe.yml
           cli-version: latest
-        
+          args: --no-sign
+
+      - name: Upload ISO Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: silvestreos-iso
+          path: |
+            *.iso
+            **/*.iso
+            output/*.iso
