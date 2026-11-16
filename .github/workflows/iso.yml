@@ -1,44 +1,24 @@
-name: Build ISOs
+name: Build ISO
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - 'recipe.yml'
-      - 'recipes/**'
+  workflow_dispatch:
 
 jobs:
-  build-standard-iso:
-    name: Build Standard ISO
+  build:
+    name: Build ISO
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: read
+      id-token: write
+      packages: write
     steps:
-      - name: Checkout Repo
+      - name: Checkout Source
         uses: actions/checkout@v4
 
-      - name: Build Standard ISO from Image
-        uses: blue-build/iso-action@v1
+      - name: Build Custom ISO
+        uses: blue-build/github-action@v1
         with:
-          recipe: recipe.yml
-          image-name: silvestre
-          output-name: SilvestreOS-Standard-Installer
-
-  build-nvidia-iso:
-    name: Build Nvidia ISO
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: read
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build Nvidia ISO from Image
-        uses: blue-build/iso-action@v1
-        with:
-          recipe: recipes/recipe-nvidia.yml
-          image-name: silvestre-nvidia
-          output-name: SilvestreOS-Nvidia-Installer
+          recipe: recipes/recipe.yml
+          cli-version: latest
