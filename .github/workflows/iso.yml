@@ -22,5 +22,4 @@ jobs:
         with:
           recipe: recipes/recipe.yml
           cli-version: latest
-          cosign-enabled: false
-          skip-image-validation: true
+          args: --no-sign
