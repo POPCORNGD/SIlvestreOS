@@ -17,6 +17,10 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
 
+      - name: Create dummy cosign files
+        run: |
+          touch cosign.key cosign.pub
+
       - name: Build Custom ISO
         uses: blue-build/github-action@v1
         with:
