@@ -1,4 +1,4 @@
-name: Build ISO
+name: Build Standard ISO
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build ISO
+    name: Build Standard ISO
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -23,3 +23,11 @@ jobs:
           recipe: recipes/recipe.yml
           cli-version: latest
           args: --no-sign
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: silvestreos-standard-iso
+          path: |
+            *.iso
+            output/*.iso
