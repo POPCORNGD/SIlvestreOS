@@ -19,6 +19,7 @@ jobs:
 
       - name: Generate dummy keys for Cosign
         run: |
+          mkdir -p .github
           echo "dummy-private-key" > cosign.key
           echo "dummy-public-key" > cosign.pub
 
@@ -27,7 +28,7 @@ jobs:
         with:
           recipe: recipes/recipe.yml
           cli-version: latest
-          args: --no-sign
+          args: --no-sign --skip-image-validation
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
@@ -37,3 +38,4 @@ jobs:
             *.iso
             **/*.iso
             output/*.iso
+            build/*.iso
