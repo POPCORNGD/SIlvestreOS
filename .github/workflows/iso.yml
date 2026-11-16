@@ -17,7 +17,7 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
 
-      - name: Create bypass files
+      - name: Create bypass keys
         run: |
           touch cosign.key cosign.pub
 
