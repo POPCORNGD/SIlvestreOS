@@ -31,7 +31,7 @@ jobs:
           args: --no-sign --skip-image-validation
 
       - name: Upload ISO Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: silvestreos-iso
           path: |
